@@ -1,0 +1,67 @@
+---
+fluent-plugin-librato-metrics: |+
+  TODO
+fluent-plugin-tail-ex: |+
+  Merged in in_tail in Fluentd v0.10.45. [fluent/fluentd#269](https://github.com/fluent/fluentd/issues/269)
+fluent-plugin-tail-lite: |+
+  Use [in\_tail](http://docs.fluentd.org/v0.12/categories/in_tail) instead.
+fluent-plugin-tail-multiline: |+
+  Merged in in_tail in Fluentd v0.10.45. [fluent/fluentd#269](https://github.com/fluent/fluentd/issues/269)
+fluent-plugin-tail-asis: |+
+  Use [in\_tail](http://docs.fluentd.org/v0.12/categories/in_tail) instead.
+fluent-plugin-tailpath: |+
+  Use [in\_tail](http://docs.fluentd.org/v0.12/categories/in_tail) instead.
+fluent-plugin-tail-multiline-ex: |+
+  Use [in\_tail](http://docs.fluentd.org/v0.12/categories/in_tail) instead.
+fluent-plugin-hostname: |+
+  Use [filter\_record\_transformer](http://docs.fluentd.org/v0.12/articles/filter_record_transformer) instead.
+fluent-plugin-mysql-bulk: |+
+  Merged to [tagomoris/fluent-plugin-mysql](https://github.com/tagomoris/fluent-plugin-mysql)
+fluent-plugin-calc: |+
+  Moved to [sonots/fluent-plugin-stats](https://github.com/sonots/fluent-plugin-stats)
+fluent-plugin-mysqlslowquery: |+
+  Unmaintained since 2015-10-08.
+  See: [comment](https://github.com/yuku-t/fluent-plugin-mysqlslowquery/issues/15#issuecomment-146473679)
+fluent-plugin-tail_path: |+
+  Merged in in_tail in Fluentd v0.12.24. [fluent/fluentd#951](https://github.com/fluent/fluentd/pull/951)
+fluent-plugin-amqp2: |+
+  Unmaintained since 2015-09-01.
+  Use [fluent-plugin-amqp](https://github.com/giraffi/fluent-plugin-amqp) instead.
+fluent-plugin-s3-fork: |+
+  Git repository has gone away.
+fluent-plugin-rambler: |+
+  Git repository has gone away.
+fluent-plugin-out_chatwork: |+
+  Replaced with [fluent-plugin-chatwork](https://rubygems.org/gems/fluent-plugin-chatwork).
+fluent-plugin-firehose: |+
+  Git repository has gone away. Use `kinesis_firehose` in [fluent-plugin-kinesis](https://github.com/awslabs/aws-fluent-plugin-kinesis) instead..
+fluent-plugin-kinesis-firehose: |+
+  Deprecated. Use [fluent-plugin-kinesis](https://github.com/awslabs/aws-fluent-plugin-kinesis) instead.
+fluent-plugin-kinesis-alt: |+
+  Unmaintained since 2013-12-26. Use [fluent-plugin-kinesis](https://github.com/awslabs/aws-fluent-plugin-kinesis) instead.
+fluent-plugin-cloudtrail: |+
+  Deprecated: Consider using [fluent-plugin-s3](https://github.com/fluent/fluent-plugin-s3).
+fluent-plugin-bigquery-custom: |+
+  Almost feature is included in original. Use fluent-plugin-bigquery instead.
+fluent-plugin-embedded-elasticsearch: |+
+  Git repository has gone away.
+fluent-plugin-kestrel: |+
+  [Kestrel](https://github.com/robey/kestrel) is inactive. Unmaintained since 2014-03-07.
+fluent-plugin-access: |+
+  There are no implementation. Unmaintained since 2012-11-27.
+fluent-plugin-bigquery-patched-retry-insert-502: |+
+  This has already been merged into upstream.
+fluent-plugin-dummydata-producer: |+
+  Use built-in [in\_dummy](http://docs.fluentd.org/v0.12/categories/in_dummy).
+fluent-plugin-encrypt: |+
+  This is outdated. See [comment](https://github.com/tagomoris/fluent-plugin-encrypt/pull/4#issuecomment-299804521).
+fluent-plugin-winevtlog: |+
+  Use [fluent-plugin-windows-eventlog](https://github.com/fluent/fluent-plugin-windows-eventlog) instead.
+fluent-plugin-droonga: |+
+  Use [Droonga engine](https://github.com/droonga/droonga-engine) instead.
+fluent-plugin-growl: |+
+  Growl does not support OS X 10.10 or later. Use [fluent-plugin-terminal_notifier](https://github.com/cosmo0920/fluent-plugin-terminal_notifier) instead.
+fluent-plugin-hatohol: |+
+  This plugin is obsolete because HAPI1 is deprecated.
+fluent-plugin-norikra-patched-7: |+
+  Already merged into upstream.
