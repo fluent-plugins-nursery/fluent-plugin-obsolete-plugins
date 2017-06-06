@@ -1,5 +1,7 @@
 # fluent-plugin-obsolete-plugins
 
+[![Build Status](https://travis-ci.org/okkez/fluent-plugin-obsolete-plugins.svg?branch=master)](https://travis-ci.org/okkez/fluent-plugin-obsolete-plugins)
+
 [Fluentd](http://fluentd.org/) filter plugin to warn obsolete plugins if detect on boot.
 
 This plugin does not modify incoming records.
