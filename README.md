@@ -1,8 +1,8 @@
 # fluent-plugin-obsolete-plugins
 
-[Fluentd](http://fluentd.org/) filter plugin to do something.
+[Fluentd](http://fluentd.org/) filter plugin to warn obsolete plugins if detect on boot.
 
-TODO: write description for you plugin.
+This plugin does not modify incoming records.
 
 ## Installation
 
@@ -28,13 +28,17 @@ $ bundle
 
 ## Configuration
 
-You can generate configuration template:
+### obsolete_plugins_yml (string) (optional)
 
-```
-$ fluent-plugin-format-config filter obsolete-plugins
-```
+Path to obsolete-plugins.yml
 
-You can copy and paste generated documents here.
+Default value: `https://raw.githubusercontent.com/fluent/fluentd-website/master/scripts/obsolete-plugins.yml`.
+
+### raise_error (bool) (optional)
+
+Raise error if obsolete plugins are detected
+
+Default value: `no`.
 
 ## Copyright
 
