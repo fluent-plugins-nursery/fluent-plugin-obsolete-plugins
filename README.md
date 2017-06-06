@@ -40,7 +40,7 @@ Default value: `https://raw.githubusercontent.com/fluent/fluentd-website/master/
 
 Raise error if obsolete plugins are detected
 
-Default value: `no`.
+Default value: `false`.
 
 ## Copyright
 

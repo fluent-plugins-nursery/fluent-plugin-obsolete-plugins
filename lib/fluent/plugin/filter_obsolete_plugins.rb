@@ -27,7 +27,7 @@ module Fluent
       desc "Path to obsolete-plugins.yml"
       config_param :obsolete_plugins_yml, :string, default: OBSOLETE_PLUGINS_URL
       desc "Raise error if obsolete plugins are detected"
-      config_param :raise_error, :bool, default: "no"
+      config_param :raise_error, :bool, default: false
 
       def configure(conf)
         super
