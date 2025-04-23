@@ -23,7 +23,7 @@ class ObsoletePluginsFilterTest < Test::Unit::TestCase
       d.feed({ message: "This is test message." })
     end
     assert_equal([{ message: "This is test message." }], d.filtered_records)
-    assert_equal([], $log.logs)
+    assert_equal([], d.logs)
   end
 
   test "obsolete plugins" do
@@ -42,7 +42,7 @@ class ObsoletePluginsFilterTest < Test::Unit::TestCase
       "#{@time} [warn]: fluent-plugin-tail-multiline is obsolete: Merged in in_tail in Fluentd v0.10.45. [fluent/fluentd#269](https://github.com/fluent/fluentd/issues/269)\n",
       "#{@time} [warn]: fluent-plugin-hostname is obsolete: Use [filter\\_record\\_transformer](http://docs.fluentd.org/v0.12/articles/filter_record_transformer) instead.\n"
     ]
-    assert_equal(expected_logs, $log.logs)
+    assert_equal(expected_logs, d.logs)
   end
 
   test "raise error when detect obsolete plugins" do
@@ -56,11 +56,6 @@ class ObsoletePluginsFilterTest < Test::Unit::TestCase
     ex = assert_raise(Fluent::ConfigError) do
       create_driver(CONFIG + "raise_error yes")
     end
-    expected_logs = [
-      "#{@time} [warn]: fluent-plugin-tail-multiline is obsolete: Merged in in_tail in Fluentd v0.10.45. [fluent/fluentd#269](https://github.com/fluent/fluentd/issues/269)\n",
-      "#{@time} [warn]: fluent-plugin-hostname is obsolete: Use [filter\\_record\\_transformer](http://docs.fluentd.org/v0.12/articles/filter_record_transformer) instead.\n"
-    ]
-    assert_equal(expected_logs, $log.logs)
     assert_equal("Detected obsolete plugins", ex.message)
   end
 

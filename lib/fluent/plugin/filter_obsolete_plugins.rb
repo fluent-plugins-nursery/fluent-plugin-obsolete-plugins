@@ -38,7 +38,7 @@ module Fluent
 
         obsolete_plugins = Gem.loaded_specs.keys & @obsolete_plugins.keys
         obsolete_plugins.each do |name|
-          $log.warn("#{name} is obsolete: #{@obsolete_plugins[name].chomp}")
+          log.warn("#{name} is obsolete: #{@obsolete_plugins[name].chomp}")
         end
         if @raise_error && !obsolete_plugins.empty?
           raise Fluent::ConfigError, "Detected obsolete plugins"
