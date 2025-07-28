@@ -16,24 +16,40 @@
 require "fluent/plugin/filter"
 require "open-uri"
 require "yaml"
+require "json"
 
 module Fluent
   module Plugin
     class ObsoletePluginsFilter < Fluent::Plugin::Filter
       Fluent::Plugin.register_filter("obsolete_plugins", self)
 
-      OBSOLETE_PLUGINS_URL = "https://raw.githubusercontent.com/fluent/fluentd-website/master/scripts/obsolete-plugins.yml"
+      PLUGINS_JSON_URL = "https://raw.githubusercontent.com/fluent/fluentd-website/master/scripts/plugins.json"
 
       desc "Path to obsolete-plugins.yml"
-      config_param :obsolete_plugins_yml, :string, default: OBSOLETE_PLUGINS_URL
+      config_param :obsolete_plugins_yml, :string, default: nil, deprecated: "use plugins_json parameter instead"
+      desc "Path to plugins.json"
+      config_param :plugins_json, :string, default: PLUGINS_JSON_URL
       desc "Raise error if obsolete plugins are detected"
       config_param :raise_error, :bool, default: false
 
       def configure(conf)
         super
 
-        @obsolete_plugins = URI.open(@obsolete_plugins_yml) do |io|
-          YAML.safe_load(io.read)
+        if @obsolete_plugins_yml
+          @obsolete_plugins = URI.open(@obsolete_plugins_yml) do |io|
+            YAML.safe_load(io.read)
+          end
+        else
+          plugins = URI.open(@plugins_json) do |io|
+            # io.read causes Encoding::UndefinedConversionError with UTF-8 data when Ruby is started with "-Eascii-8bit:ascii-8bit".
+            # It set the proper encoding to avoid the error.
+            io.set_encoding("UTF-8", "UTF-8")
+            JSON.parse(io.read)
+          end
+          @obsolete_plugins = plugins.select { |plugin| plugin["obsolete"] }.reduce({}) do |result, plugin|
+            result[plugin["name"]] = plugin["note"]
+            result
+          end
         end
 
         obsolete_plugins = Gem.loaded_specs.keys & @obsolete_plugins.keys

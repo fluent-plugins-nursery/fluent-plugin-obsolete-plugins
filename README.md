@@ -30,11 +30,18 @@ $ bundle
 
 ## Configuration
 
-### obsolete_plugins_yml (string) (optional)
+### plugins_json (string) (optional)
 
-Path to obsolete-plugins.yml
+Path to `plugins.json`.
 
-Default value: `https://raw.githubusercontent.com/fluent/fluentd-website/master/scripts/obsolete-plugins.yml`.
+Default value: `https://raw.githubusercontent.com/fluent/fluentd-website/master/scripts/plugins.json`.
+
+
+### Deprecated: obsolete_plugins_yml (string) (optional)
+
+Path to `obsolete-plugins.yml`. This parameter is deprecated. Please use `plugins_json` parameter instead.
+
+Default value: `nil`
 
 ### raise_error (bool) (optional)
 
