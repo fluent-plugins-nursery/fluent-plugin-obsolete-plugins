@@ -32,7 +32,7 @@ module Fluent
       def configure(conf)
         super
 
-        @obsolete_plugins = open(@obsolete_plugins_yml) do |io|
+        @obsolete_plugins = URI.open(@obsolete_plugins_yml) do |io|
           YAML.safe_load(io.read)
         end
 
