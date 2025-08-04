@@ -14,35 +14,33 @@
 # limitations under the License.
 
 require "fluent/plugin/filter"
-require "open-uri"
-require "yaml"
+require "fluent/plugin/obsolete_plugins_utils"
 
 module Fluent
   module Plugin
     class ObsoletePluginsFilter < Fluent::Plugin::Filter
       Fluent::Plugin.register_filter("obsolete_plugins", self)
 
-      OBSOLETE_PLUGINS_URL = "https://raw.githubusercontent.com/fluent/fluentd-website/master/scripts/obsolete-plugins.yml"
+      PLUGINS_JSON_URL = "https://raw.githubusercontent.com/fluent/fluentd-website/master/scripts/plugins.json"
 
       desc "Path to obsolete-plugins.yml"
-      config_param :obsolete_plugins_yml, :string, default: OBSOLETE_PLUGINS_URL
+      config_param :obsolete_plugins_yml, :string, default: nil, deprecated: "use plugins_json parameter instead"
+      desc "Path to plugins.json"
+      config_param :plugins_json, :string, default: PLUGINS_JSON_URL
       desc "Raise error if obsolete plugins are detected"
       config_param :raise_error, :bool, default: false
 
       def configure(conf)
         super
 
-        @obsolete_plugins = URI.open(@obsolete_plugins_yml) do |io|
-          YAML.safe_load(io.read)
-        end
+        obsolete_plugins =
+          if @obsolete_plugins_yml
+            ObsoletePluginsUtils.obsolete_plugins_from_yaml(@obsolete_plugins_yml)
+          else
+            ObsoletePluginsUtils.obsolete_plugins_from_json(@plugins_json)
+          end
 
-        obsolete_plugins = Gem.loaded_specs.keys & @obsolete_plugins.keys
-        obsolete_plugins.each do |name|
-          log.warn("#{name} is obsolete: #{@obsolete_plugins[name].chomp}")
-        end
-        if @raise_error && !obsolete_plugins.empty?
-          raise Fluent::ConfigError, "Detected obsolete plugins"
-        end
+        ObsoletePluginsUtils.notify(log, obsolete_plugins, raise_error: @raise_error)
       end
 
       def filter(tag, time, record)
