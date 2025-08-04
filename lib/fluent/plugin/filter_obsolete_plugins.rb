@@ -14,9 +14,7 @@
 # limitations under the License.
 
 require "fluent/plugin/filter"
-require "open-uri"
-require "yaml"
-require "json"
+require "fluent/plugin/obsolete_plugins_utils"
 
 module Fluent
   module Plugin
@@ -35,30 +33,14 @@ module Fluent
       def configure(conf)
         super
 
-        if @obsolete_plugins_yml
-          @obsolete_plugins = URI.open(@obsolete_plugins_yml) do |io|
-            YAML.safe_load(io.read)
+        obsolete_plugins =
+          if @obsolete_plugins_yml
+            ObsoletePluginsUtils.obsolete_plugins_from_yaml(@obsolete_plugins_yml)
+          else
+            ObsoletePluginsUtils.obsolete_plugins_from_json(@plugins_json)
           end
-        else
-          plugins = URI.open(@plugins_json) do |io|
-            # io.read causes Encoding::UndefinedConversionError with UTF-8 data when Ruby is started with "-Eascii-8bit:ascii-8bit".
-            # It set the proper encoding to avoid the error.
-            io.set_encoding("UTF-8", "UTF-8")
-            JSON.parse(io.read)
-          end
-          @obsolete_plugins = plugins.select { |plugin| plugin["obsolete"] }.reduce({}) do |result, plugin|
-            result[plugin["name"]] = plugin["note"]
-            result
-          end
-        end
 
-        obsolete_plugins = Gem.loaded_specs.keys & @obsolete_plugins.keys
-        obsolete_plugins.each do |name|
-          log.warn("#{name} is obsolete: #{@obsolete_plugins[name].chomp}")
-        end
-        if @raise_error && !obsolete_plugins.empty?
-          raise Fluent::ConfigError, "Detected obsolete plugins"
-        end
+        ObsoletePluginsUtils.notify(log, obsolete_plugins, raise_error: @raise_error)
       end
 
       def filter(tag, time, record)
