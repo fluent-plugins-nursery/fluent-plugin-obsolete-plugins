@@ -1,0 +1,11 @@
+[
+  {
+    "obsolete": null,
+    "note": null,
+    "name": "fluent-plugin-s3",
+    "info": "Amazon S3 output plugin for Fluentd event collector",
+    "authors": "Sadayuki Furuhashi, Masahiro Nakagawa",
+    "version": "1.8.3",
+    "downloads": 134522742,
+    "homepage_uri": "https://github.com/fluent/fluent-plugin-s3",
+    "source_code_uri": null

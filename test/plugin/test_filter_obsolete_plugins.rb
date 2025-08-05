@@ -1,5 +1,5 @@
 require "helper"
-require "fluent/plugin/filter_obsolete_plugins.rb"
+require "fluent/plugin/filter_obsolete_plugins"
 
 class ObsoletePluginsFilterTest < Test::Unit::TestCase
 
@@ -114,9 +114,54 @@ class ObsoletePluginsFilterTest < Test::Unit::TestCase
     end
   end
 
+  sub_test_case "error handling" do
+    test "ignore error with invalid json" do
+      assert_nothing_raised {
+        create_driver("plugins_json #{fixture_path('invalid.json')}")
+      }
+    end
+
+    test "timeout with slow server and skip detecting obsolete plugins" do
+      server = create_slow_webserver(port: 12345)
+
+      mock(Fluent::Plugin::ObsoletePluginsUtils).notify.never
+
+      d = create_driver(%[
+        plugins_json http://localhost:12345/plugins.json
+        timeout 1
+      ])
+
+      d.run(default_tag: "test") do
+        d.feed({ message: "This is test message." })
+      end
+      assert_equal([{ message: "This is test message." }], d.filtered_records)
+
+      sleep 2
+
+      assert_equal([], d.logs)
+    ensure
+      server.shutdown
+    end
+
+  end
+
   private
 
   def create_driver(conf)
     Fluent::Test::Driver::Filter.new(Fluent::Plugin::ObsoletePluginsFilter).configure(conf)
+  end
+
+  def create_slow_webserver(port: 12345)
+    require "webrick"
+
+    server = WEBrick::HTTPServer.new(Port: port)
+    server.mount_proc '/' do |req, res|
+      sleep 60
+
+      res['Content-Type'] = 'application/json'
+      res.body = File.read(fixture_path("plugins.json"))
+    end
+
+    server
   end
 end
