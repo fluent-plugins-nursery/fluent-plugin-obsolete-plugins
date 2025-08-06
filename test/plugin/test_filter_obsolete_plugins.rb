@@ -6,7 +6,6 @@ class ObsoletePluginsFilterTest < Test::Unit::TestCase
 
   setup do
     Fluent::Test.setup
-    $log = Fluent::Test::TestLogger.new
     @time = Time.now
     Timecop.freeze(@time)
   end
