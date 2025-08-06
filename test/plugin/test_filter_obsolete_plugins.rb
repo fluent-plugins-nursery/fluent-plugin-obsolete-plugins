@@ -1,5 +1,5 @@
 require "helper"
-require "fluent/plugin/filter_obsolete_plugins.rb"
+require "fluent/plugin/filter_obsolete_plugins"
 
 class ObsoletePluginsFilterTest < Test::Unit::TestCase
 
@@ -114,9 +114,57 @@ class ObsoletePluginsFilterTest < Test::Unit::TestCase
     end
   end
 
+  sub_test_case "error handling" do
+    test "invalid json" do
+      d = create_driver("plugins_json #{fixture_path('invalid.json')}")
+
+      expected_logs = [
+        "#{@time} [info]: Failed to notfify obsolete plugins error_class=JSON::ParserError error=\"expected ',' or '}' after object value, got: EOF at line 11 column 1\"\n",
+      ]
+
+      assert_equal(expected_logs, d.logs)
+    end
+
+    test "timeout with slow server" do
+      server = create_slow_webserver(port: 12345)
+
+      mock(Fluent::Plugin::ObsoletePluginsUtils).notify.never
+
+      d = create_driver(%[
+        plugins_json http://localhost:12345/plugins.json
+        timeout 1
+      ])
+
+      sleep 2
+
+      expected_logs = [
+        "#{@time} [info]: Failed to notfify obsolete plugins error_class=Timeout::Error error=\"execution expired\"\n",
+      ]
+
+      assert_equal(expected_logs, d.logs)
+    ensure
+      server.shutdown
+    end
+
+  end
+
   private
 
   def create_driver(conf)
     Fluent::Test::Driver::Filter.new(Fluent::Plugin::ObsoletePluginsFilter).configure(conf)
+  end
+
+  def create_slow_webserver(port: 12345)
+    require "webrick"
+
+    server = WEBrick::HTTPServer.new(Port: port)
+    server.mount_proc '/' do |req, res|
+      sleep 60
+
+      res['Content-Type'] = 'application/json'
+      res.body = File.read(fixture_path("plugins.json"))
+    end
+
+    server
   end
 end

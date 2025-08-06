@@ -27,6 +27,8 @@ module Fluent
       config_param :obsolete_plugins_yml, :string, default: nil, deprecated: "use plugins_json parameter instead"
       desc "Path to plugins.json"
       config_param :plugins_json, :string, default: PLUGINS_JSON_URL
+      desc "Timeout value to read data of obsolete plugins"
+      config_param :timeout, :integer, default: 5
       desc "Raise error if obsolete plugins are detected"
       config_param :raise_error, :bool, default: false
 
@@ -35,12 +37,16 @@ module Fluent
 
         obsolete_plugins =
           if @obsolete_plugins_yml
-            ObsoletePluginsUtils.obsolete_plugins_from_yaml(@obsolete_plugins_yml)
+            ObsoletePluginsUtils.obsolete_plugins_from_yaml(@obsolete_plugins_yml, timeout: @timeout)
           else
-            ObsoletePluginsUtils.obsolete_plugins_from_json(@plugins_json)
+            ObsoletePluginsUtils.obsolete_plugins_from_json(@plugins_json, timeout: @timeout)
           end
 
         ObsoletePluginsUtils.notify(log, obsolete_plugins, raise_error: @raise_error)
+      rescue Fluent::ConfigError
+        raise
+      rescue => e
+        log.info("Failed to notfify obsolete plugins", error: e)
       end
 
       def filter(tag, time, record)

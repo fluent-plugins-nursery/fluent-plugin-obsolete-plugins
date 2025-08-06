@@ -43,6 +43,13 @@ Path to `obsolete-plugins.yml`. This parameter is deprecated. Please use `plugin
 
 Default value: `nil`
 
+### timeout (integer) (optional)
+
+Timeout to read data of obsolete plugins.
+If it occurs timeout, it just skips to detect obsolete plugins.
+
+Default value: `5`
+
 ### raise_error (bool) (optional)
 
 Raise error if obsolete plugins are detected
