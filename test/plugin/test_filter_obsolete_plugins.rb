@@ -115,13 +115,17 @@ class ObsoletePluginsFilterTest < Test::Unit::TestCase
   end
 
   sub_test_case "error handling" do
-    test "ignore error with invalid json" do
-      assert_nothing_raised {
-        create_driver("plugins_json #{fixture_path('invalid.json')}")
-      }
+    test "invalid json" do
+      d = create_driver("plugins_json #{fixture_path('invalid.json')}")
+
+      expected_logs = [
+        "#{@time} [info]: Failed to notfify obsolete plugins error_class=JSON::ParserError error=\"expected ',' or '}' after object value, got: EOF at line 11 column 1\"\n",
+      ]
+
+      assert_equal(expected_logs, d.logs)
     end
 
-    test "timeout with slow server and skip detecting obsolete plugins" do
+    test "timeout with slow server" do
       server = create_slow_webserver(port: 12345)
 
       mock(Fluent::Plugin::ObsoletePluginsUtils).notify.never
@@ -131,14 +135,13 @@ class ObsoletePluginsFilterTest < Test::Unit::TestCase
         timeout 1
       ])
 
-      d.run(default_tag: "test") do
-        d.feed({ message: "This is test message." })
-      end
-      assert_equal([{ message: "This is test message." }], d.filtered_records)
-
       sleep 2
 
-      assert_equal([], d.logs)
+      expected_logs = [
+        "#{@time} [info]: Failed to notfify obsolete plugins error_class=Timeout::Error error=\"execution expired\"\n",
+      ]
+
+      assert_equal(expected_logs, d.logs)
     ensure
       server.shutdown
     end

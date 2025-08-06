@@ -45,8 +45,8 @@ module Fluent
         ObsoletePluginsUtils.notify(log, obsolete_plugins, raise_error: @raise_error)
       rescue Fluent::ConfigError
         raise
-      rescue
-        # ignore other exception
+      rescue => e
+        log.info("Failed to notfify obsolete plugins", error: e)
       end
 
       def filter(tag, time, record)
