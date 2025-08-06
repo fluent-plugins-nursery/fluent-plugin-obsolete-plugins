@@ -3,7 +3,6 @@ require "test-unit"
 require "test/unit/rr"
 require "timecop"
 require "fluent/test"
-require "fluent/test/driver/filter"
 require "fluent/test/helpers"
 
 Test::Unit::TestCase.include(Fluent::Test::Helpers)
