@@ -21,6 +21,10 @@ class ObsoletePluginsInputTest < Test::Unit::TestCase
     ]
 
     test "no obsolete plugins" do
+      stub(Fluent::Plugin::ObsoletePluginsUtils).installed_plugins do
+        []
+      end
+
       d = create_driver(CONFIG_JSON)
       d.run
       assert_equal([], d.events)
@@ -28,12 +32,10 @@ class ObsoletePluginsInputTest < Test::Unit::TestCase
     end
 
     test "obsolete plugins" do
-      stub(Gem).loaded_specs do
-        {
-          "fluent-plugin-tail-multiline" => nil,
-          "fluent-plugin-hostname" => nil
-        }
+      stub(Fluent::Plugin::ObsoletePluginsUtils).installed_plugins do
+        ["fluent-plugin-tail-multiline", "fluent-plugin-hostname"]
       end
+
       d = create_driver(CONFIG_JSON)
       d.run
       assert_equal([], d.events)
@@ -45,11 +47,8 @@ class ObsoletePluginsInputTest < Test::Unit::TestCase
     end
 
     test "raise error when detect obsolete plugins" do
-      stub(Gem).loaded_specs do
-        {
-          "fluent-plugin-tail-multiline" => nil,
-          "fluent-plugin-hostname" => nil
-        }
+      stub(Fluent::Plugin::ObsoletePluginsUtils).installed_plugins do
+        ["fluent-plugin-tail-multiline", "fluent-plugin-hostname"]
       end
 
       ex = assert_raise(Fluent::ConfigError) do

@@ -28,8 +28,12 @@ class Fluent::Plugin::ObsoletePluginsUtils
     end
   end
 
+  def self.installed_plugins
+    Gem::Specification.find_all.select { |x| x.name =~ /^fluent(d|-(plugin|mixin)-.*)$/ }.map(&:name)
+  end
+
   def self.notify(logger, obsolete_plugins, raise_error: false)
-    plugins = Gem.loaded_specs.keys & obsolete_plugins.keys
+    plugins = Fluent::Plugin::ObsoletePluginsUtils.installed_plugins & obsolete_plugins.keys
     plugins.each do |name|
       logger.warn("#{name} is obsolete: #{obsolete_plugins[name].chomp}")
     end

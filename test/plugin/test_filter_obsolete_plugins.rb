@@ -20,6 +20,10 @@ class ObsoletePluginsFilterTest < Test::Unit::TestCase
     ]
 
     test "no obsolete plugins" do
+      stub(Fluent::Plugin::ObsoletePluginsUtils).installed_plugins do
+        []
+      end
+
       d = create_driver(CONFIG_YAML)
       d.run(default_tag: "test") do
         d.feed({ message: "This is test message." })
@@ -32,12 +36,10 @@ class ObsoletePluginsFilterTest < Test::Unit::TestCase
     end
 
     test "obsolete plugins" do
-      mock(Gem).loaded_specs do
-        {
-          "fluent-plugin-tail-multiline" => nil,
-          "fluent-plugin-hostname" => nil
-        }
+      stub(Fluent::Plugin::ObsoletePluginsUtils).installed_plugins do
+        ["fluent-plugin-tail-multiline", "fluent-plugin-hostname"]
       end
+
       d = create_driver(CONFIG_YAML)
       d.run(default_tag: "test") do
         d.feed({ message: "This is test message." })
@@ -52,11 +54,8 @@ class ObsoletePluginsFilterTest < Test::Unit::TestCase
     end
 
     test "raise error when detect obsolete plugins" do
-      mock(Gem).loaded_specs do
-        {
-          "fluent-plugin-tail-multiline" => nil,
-          "fluent-plugin-hostname" => nil
-        }
+      stub(Fluent::Plugin::ObsoletePluginsUtils).installed_plugins do
+        ["fluent-plugin-tail-multiline", "fluent-plugin-hostname"]
       end
 
       ex = assert_raise(Fluent::ConfigError) do
@@ -72,6 +71,10 @@ class ObsoletePluginsFilterTest < Test::Unit::TestCase
     ]
 
     test "no obsolete plugins" do
+      stub(Fluent::Plugin::ObsoletePluginsUtils).installed_plugins do
+        []
+      end
+
       d = create_driver(CONFIG_JSON)
       d.run(default_tag: "test") do
         d.feed({ message: "This is test message." })
@@ -81,12 +84,10 @@ class ObsoletePluginsFilterTest < Test::Unit::TestCase
     end
 
     test "obsolete plugins" do
-      mock(Gem).loaded_specs do
-        {
-          "fluent-plugin-tail-multiline" => nil,
-          "fluent-plugin-hostname" => nil
-        }
+      stub(Fluent::Plugin::ObsoletePluginsUtils).installed_plugins do
+        ["fluent-plugin-tail-multiline", "fluent-plugin-hostname"]
       end
+
       d = create_driver(CONFIG_JSON)
       d.run(default_tag: "test") do
         d.feed({ message: "This is test message." })
@@ -100,11 +101,8 @@ class ObsoletePluginsFilterTest < Test::Unit::TestCase
     end
 
     test "raise error when detect obsolete plugins" do
-      mock(Gem).loaded_specs do
-        {
-          "fluent-plugin-tail-multiline" => nil,
-          "fluent-plugin-hostname" => nil
-        }
+      stub(Fluent::Plugin::ObsoletePluginsUtils).installed_plugins do
+        ["fluent-plugin-tail-multiline", "fluent-plugin-hostname"]
       end
 
       ex = assert_raise(Fluent::ConfigError) do
