@@ -15,6 +15,10 @@ module Fluent
       desc "Raise error if obsolete plugins are detected"
       config_param :raise_error, :bool, default: false
 
+      def multi_workers_ready?
+        true
+      end
+
       def configure(conf)
         super
 

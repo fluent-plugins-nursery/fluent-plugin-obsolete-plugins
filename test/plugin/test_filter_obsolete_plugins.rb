@@ -14,6 +14,15 @@ class ObsoletePluginsFilterTest < Test::Unit::TestCase
     Timecop.return
   end
 
+  test "multi worker" do
+    config = %[
+      obsolete_plugins_yml #{fixture_path("obsolete-plugins.yml")}
+    ]
+
+    d = create_driver(config)
+    assert_true d.instance.multi_workers_ready?
+  end
+
   sub_test_case "obsolete_plugins_yml" do
     CONFIG_YAML = %[
       obsolete_plugins_yml #{fixture_path("obsolete-plugins.yml")}

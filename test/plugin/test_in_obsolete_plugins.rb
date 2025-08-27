@@ -15,6 +15,15 @@ class ObsoletePluginsInputTest < Test::Unit::TestCase
     Timecop.return
   end
 
+  test "multi worker" do
+    config = %[
+      obsolete_plugins_yml #{fixture_path("obsolete-plugins.yml")}
+    ]
+
+    d = create_driver(config)
+    assert_true d.instance.multi_workers_ready?
+  end
+
   sub_test_case "plugins_json" do
     CONFIG_JSON = %[
       plugins_json #{fixture_path("plugins.json")}
