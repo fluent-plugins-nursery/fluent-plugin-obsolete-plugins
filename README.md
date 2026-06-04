@@ -1,6 +1,6 @@
 # fluent-plugin-obsolete-plugins
 
-[![Build Status](https://travis-ci.org/okkez/fluent-plugin-obsolete-plugins.svg?branch=master)](https://travis-ci.org/okkez/fluent-plugin-obsolete-plugins)
+[![Testing on Ubuntu](https://github.com/fluent-plugins-nursery/fluent-plugin-obsolete-plugins/actions/workflows/ci.yml/badge.svg)](https://github.com/fluent-plugins-nursery/fluent-plugin-obsolete-plugins/actions/workflows/ci.yml)
 
 [Fluentd](http://fluentd.org/) filter plugin to warn obsolete plugins if detect on boot.
 
