@@ -72,7 +72,7 @@ class ObsoletePluginsInputTest < Test::Unit::TestCase
       d = create_driver("plugins_json #{fixture_path('invalid.json')}")
 
       expected_logs = [
-        "#{@time} [info]: Failed to notify obsolete plugins error_class=JSON::ParserError error=\"expected ',' or '}' after object value, got: EOF at line 11 column 1\"\n",
+        "#{@time} [info]: Failed to notify obsolete plugins error_class=JSON::ParserError error=\"expected ',' or '}' after object value, got: EOF at line 12 column 1\"\n",
       ]
 
       assert_equal(expected_logs, d.logs)
