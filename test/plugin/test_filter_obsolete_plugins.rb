@@ -150,7 +150,7 @@ class ObsoletePluginsFilterTest < Test::Unit::TestCase
 
       assert_equal(expected_logs, d.logs)
     ensure
-      server.shutdown
+      server&.listeners&.each(&:close)
     end
 
   end
